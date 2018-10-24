@@ -1,19 +1,10 @@
-FROM microsoft/dotnet:2.1-aspnetcore-runtime-nanoserver-1709 AS base
-WORKDIR /app
-EXPOSE 80
+#https://github.com/dotnet/dotnet-docker/tree/master/samples/aspnetapp
 
-FROM microsoft/dotnet:2.1-sdk-nanoserver-1709 AS build
-WORKDIR /src
-COPY CustomerWebApi/CustomerWebApi.csproj CustomerWebApi/
-RUN dotnet restore CustomerWebApi/CustomerWebApi.csproj
+FROM microsoft/dotnet:2.1-sdk AS build
+WORKDIR /app
+
 COPY . .
-WORKDIR /src/CustomerWebApi
-RUN dotnet build CustomerWebApi.csproj -c Release -o /app
 
-FROM build AS publish
-RUN dotnet publish CustomerWebApi.csproj -c Release -o /app
+CMD ASPNETCORE_URLS=http://*:$PORT dotnet CustomerWebApi.dll
 
-FROM base AS final
-WORKDIR /app
-COPY --from=publish /app .
-ENTRYPOINT ["dotnet", "CustomerWebApi.dll"]
+
