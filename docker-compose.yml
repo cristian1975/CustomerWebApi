@@ -1,0 +1,8 @@
+version: '3.4'
+
+services:
+  customerwebapi:
+    image: ${DOCKER_REGISTRY}customerwebapi
+    build:
+      context: .
+      dockerfile: CustomerWebApi\Dockerfile
