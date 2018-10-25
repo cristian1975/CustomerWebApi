@@ -12,7 +12,7 @@ namespace CustomerWebApi.Repository
         Task<Customer> Get(string id);
         Task<Customer> GetByEmail(string email);
         Task<Customer> Create(Customer customer );
-        Task<Customer> Update(Customer customer);
+        Task<Customer> Update(string id,Customer customer);
         Task<bool> Delete(string id);
     }
 }

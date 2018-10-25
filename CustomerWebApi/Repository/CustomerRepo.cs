@@ -39,11 +39,25 @@ namespace CustomerWebApi.Repository
             return customer;
         }
 
-        public async Task<Customer> Update( Customer customer)
+        public async Task<Customer> Update( string id,Customer customer)
         {
-            _context.Entry(customer).State = EntityState.Modified;
-             await _context.SaveChangesAsync();
-            return customer;
+            try
+            {
+                _context.Entry(customer).State = EntityState.Modified;
+                await _context.SaveChangesAsync();
+               return customer;
+            }
+            catch (DbUpdateConcurrencyException)
+            {
+                if (!CustomerExists(id))
+                {
+                    return null;
+                }
+                else
+                {
+                    throw;
+                }
+            }
 
         }
 
@@ -62,6 +76,16 @@ namespace CustomerWebApi.Repository
             }
 
 
+        }
+        private bool CustomerExists(string id)
+        {
+            var customer = Get(id);
+            if (customer != null)
+            {
+                return true;
+            }
+
+            return false;
         }
     }
 }

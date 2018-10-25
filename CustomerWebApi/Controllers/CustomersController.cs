@@ -97,22 +97,17 @@ namespace CustomerWebApi.Controllers
                 return BadRequest();
             }
           
-            try
+            
+            var updatedCustomer = await _repository.Update(id,customer);
+            if (updatedCustomer != null)
             {
-                var updatedCustomer = await _repository.Update(customer);
                 return Ok(updatedCustomer);
             }
-            catch (DbUpdateConcurrencyException)
+            else
             {
-                if (!CustomerExists(id))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
+                return NotFound();
             }
+        
 
         }
         ///<summary>Create or update customer</summary>
@@ -141,25 +136,21 @@ namespace CustomerWebApi.Controllers
             if (existingCustomer != null)
             {
 
-                try
-                {
+              
                     //could use mapper 
                     existingCustomer.Name = customer.Name;
                     existingCustomer.Address = customer.Address;
-                    var cust = await _repository.Update(existingCustomer);
-                    return Ok(cust);
-                }
-                catch (DbUpdateConcurrencyException)
-                {
-                    if (!CustomerExists(existingCustomer.Id))
+
+                    var cust = await _repository.Update(existingCustomer.Id,existingCustomer);
+                    if (cust != null)
                     {
-                        return NotFound();
+                        return Ok(cust);
                     }
                     else
                     {
-                        throw;
+                        return NotFound();
                     }
-                }
+
 
             }
             else
@@ -192,15 +183,6 @@ namespace CustomerWebApi.Controllers
             }
         }
 
-        private  bool CustomerExists(string id)
-        {
-            var customer =  _repository.Get(id);
-            if (customer != null)
-            {
-                return true;
-            }
-
-            return false;
-        }
+       
     }
 }
