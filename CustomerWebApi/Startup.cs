@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using CustomerWebApi.Models;
 using CustomerWebApi.Repository;
 using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.DataProtection;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -49,6 +50,8 @@ namespace CustomerWebApi
                 var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
                 c.IncludeXmlComments(xmlPath);
             });
+            services.AddDataProtection().PersistKeysToFileSystem(new DirectoryInfo(@"temp-keys"));
+
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
